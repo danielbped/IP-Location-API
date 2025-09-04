@@ -1,5 +1,4 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
-import ErrorMessage from '../../utils/ErrorMessage';
 import { LoadDataset } from 'src/helper/loadDataset.helper';
 import ipToId from 'src/helper/ipToId.helper';
 import { FindLocation } from 'src/helper/findLocation.helper';
@@ -23,19 +22,11 @@ export class LocationService implements OnModuleInit {
   }
 
   async findLocationByIp(ip: string): Promise<IpRange | null> {
-    if (!this.dataset || this.dataset.length === 0) {
-      throw new Error(ErrorMessage.DATASET_NOT_LOADED);
-    }
-
     const ipId = ipToId(ip);
-
-    if (ipId === null) {
-      throw new Error(ErrorMessage.INVALID_IP);
-    }
 
     const result = this.findLocation.run(ipId, this.dataset);
     if (!result) {
-      throw new Error(ErrorMessage.LOCATION_NOT_FOUND);
+      return null;
     }
 
     return result;
