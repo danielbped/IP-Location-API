@@ -1,15 +1,15 @@
 import { Module, NestModule, MiddlewareConsumer, RequestMethod } from "@nestjs/common";
-import { TypeOrmModule } from "@nestjs/typeorm";
-import Location from "../../entity/location.entity";
 import { LocationService } from "./location.service";
 import { LocationController } from "./location.controller";
 import { LocationMiddleware } from "../../middleware/location.middleware";
+import { LoadDataset } from 'src/helper/loadDataset.helper';
+import { FindLocation } from 'src/helper/findLocation.helper';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Location])],
+  imports: [],
   controllers: [LocationController],
-  providers: [LocationService],
-  exports: [LocationService, TypeOrmModule],
+  providers: [LocationService, LoadDataset, FindLocation],
+  exports: [LocationService],
 })
 export class LocationModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

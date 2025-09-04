@@ -1,4 +1,4 @@
-import { Controller, Get } from "@nestjs/common";
+import { Controller, Get, Request } from "@nestjs/common";
 import { LocationService } from "./location.service";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { StatusCodes } from "http-status-codes";
@@ -8,7 +8,7 @@ import { StatusCodes } from "http-status-codes";
 export class LocationController {
   constructor(private readonly locationService: LocationService) {}
 
-  @Get('/location')
+  @Get('/location/:ip')
   @ApiOperation({ summary: 'Get location by ip' })
   @ApiResponse({
     status: StatusCodes.OK,
@@ -19,7 +19,9 @@ export class LocationController {
     status: StatusCodes.BAD_REQUEST,
     description: 'Bad Request.',
   })
-  async getLocationByIp() {
-    return;
+  async getLocationByIp(@Request() req): Promise<any> {
+    const { params } = req
+    const ip = params.ip
+    return this.locationService.findLocationByIp(ip);
   }
 }
