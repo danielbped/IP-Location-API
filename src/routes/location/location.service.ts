@@ -1,9 +1,10 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable, NotFoundException, OnModuleInit } from '@nestjs/common';
 import { LoadDataset } from 'src/helper/loadDataset.helper';
 import ipToId from 'src/helper/ipToId.helper';
 import { FindLocation } from 'src/helper/findLocation.helper';
 import { IpRange } from 'src/interface/IpRange.interface';
 import * as path from 'path';
+import ErrorMessage from 'src/utils/ErrorMessage';
 
 @Injectable()
 export class LocationService implements OnModuleInit {
@@ -26,7 +27,7 @@ export class LocationService implements OnModuleInit {
 
     const result = this.findLocation.run(ipId, this.dataset);
     if (!result) {
-      return null;
+      throw new NotFoundException(ErrorMessage.LOCATION_NOT_FOUND);
     }
 
     return result;

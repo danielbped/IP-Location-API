@@ -2,6 +2,7 @@ import { Controller, Get, Request } from "@nestjs/common";
 import { LocationService } from "./location.service";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { StatusCodes } from "http-status-codes";
+import { LocationSchemaResponse } from "src/schemas/location.schema";
 
 @ApiTags('Location')
 @Controller('ip')
@@ -13,11 +14,11 @@ export class LocationController {
   @ApiResponse({
     status: StatusCodes.OK,
     description: 'Returns location by id successfully.',
-    // type: [LocationSchemaResponse],
+    type: [LocationSchemaResponse],
   })
   @ApiResponse({
-    status: StatusCodes.BAD_REQUEST,
-    description: 'Bad Request.',
+    status: StatusCodes.NOT_FOUND,
+    description: 'Location not found.',
   })
   async getLocationByIp(@Request() req): Promise<any> {
     const { params } = req
