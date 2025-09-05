@@ -1,98 +1,143 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Ip Location API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Trata-se de uma API com o intuito de fazer uma busca por IP, em uma grande base de dados, e retornar a localização do IP enviado por parâmetro. A base de dados utilizada para os testes a seguir foi um arquivo .csv com aproximadamente 3 milhões de linhas. O intuito do teste era realizar a busca com uma latência de até 100ms e o resultado obtido foi de aproximadamente 9ms, para o último item da lista. Com o objetivo comparativo, a API foi versionada, onde na v1 é realizada uma busca linear na base de dados, tendo como resultado uma latência de aproximadamente 150ms, e na v2 é realizada uma busca binária, tendo como resultado a latência, comentada anteriormente, de 9ms. A base de dados estará disponível [aqui](https://drive.google.com/file/d/1F7pKrro7snTqvH8bKZgmVEgcI9OnRKP8/view?usp=sharing) e para realizar os testes deve ser adicionada no diretório [src/assets]. Este projeto possui testes unitários do controller e testes de carga, utilizando a biblioteca [k6](https://jslib.k6.io/), com até 100 usuários simultâneos.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+# Sumário
+- [Tecnologias utilizadas](#tech)
+- [Instruções para rodar o projeto](#instructions)
+  - [Iniciando a aplicação](#start)
+- [Rotas](#rotas)
+  - [Buscar localização por IP v1](#get-location-v1)
+  - [Buscar localização por IP v2](#get-location-v2)
+    - [Busca binária](#binary-search)
+- [Testes](#tests)
 
-## Description
+## Tecnologias utilizadas <a name="tech"></a>
+- **[TypeScript](https://www.typescriptlang.org/)**: Um superconjunto de JavaScript que adiciona tipagem estática opcional ao código. Ele ajuda os desenvolvedores a detectar erros mais cedo durante o desenvolvimento e oferece ferramentas avançadas para trabalhar em projetos de grande escala, melhorando a manutenibilidade e escalabilidade do código.
+- **[Node.js](https://nodejs.org/en/)**: Plataforma de desenvolvimento para construção do ambiente de servidor.
+- **[NestJS](https://docs.nestjs.com/)**: Framework web para Node.js utilizado na construção da API.
+- **[Http Status Codes](https://www.npmjs.com/package/http-status-codes)**: Status Codes: Pacote que fornece uma lista de constantes para códigos de status HTTP.
+- **[Jest](https://jestjs.io/pt-BR/)**: Framework de teste em JavaScript com foco na simplicidade.
+- **[Swagger](https://swagger.io/)**: Ferramente utilizada para criar documentações exemplificando a utilização das rotas, de uma forma prática.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+# Instruções para rodar o projeto <a name="instructions"></a>
 
-## Project setup
+### Será necessário ter instalado na sua máquina:
 
-```bash
-$ npm install
+```
+  Git
+  Node v22.18.0
 ```
 
-## Compile and run the project
+- Clone o repositório com o comando git clone:
 
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+```
+  git clone git@github.com:danielbped/IP-Location-API.git
 ```
 
-## Run tests
+- Entre no diretório que acabou de ser criado:
 
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+```
+  cd IP-Location-API
 ```
 
-## Deployment
+## Iniciando a aplicação <a name="start"></a>
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+Após finalizar o build execute o comando a seguir para rodar a aplicação
+```
+  npm run start
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Caso tudo tenha dado certo, algo parecido com isso deve aparecer no terminal
 
-## Resources
+```
+[Nest] 51449  - 09/05/2025, 1:08:10 PM     LOG [RoutesResolver] LocationControllerV2 {/v2/ip}: +0ms
+[Nest] 51449  - 09/05/2025, 1:08:10 PM     LOG [RouterExplorer] Mapped {/v2/ip/location/:ip, GET} route +0ms
+Loading dataset...
+Dataset loaded with 2979950 rows
+[Nest] 51449  - 09/05/2025, 1:08:20 PM     LOG [NestApplication] Nest application successfully started +10194ms
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+Agora basta acessar a URL http://localhost:3000/docs para visualizar as rotas disponíveis da API.
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+# Rotas <a name="rotas"></a>
+## Buscar localização pelo IP v1 <a name="get-location-v1"></a>
+### GET /v1/ip/location/:ip
 
-## Support
+### **Parâmetros da Requisição**
+  
+  | Parâmetro     | Tipo     | Descrição                            | Observação                                      |
+  |---------------|----------|--------------------------------------|----------------------------------------------|
+  | `ip`     | string   | IP do usuário   | Deve ser no formato string Ex.: "223.0.0.0" |
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### Respostas
+- Status **200** (Created)
+  - **Descrição:** Dados retornados com sucesso.
+- Status **404** (Not Found)
+  - **Descrição:** Dados não encontrados.
+- Status **500** (Internal Server Error)
+  - **Descrição:** Erro interno do sistema.
 
-## Stay in touch
+## Buscar localização pelo IP v2 <a name="get-location-v2"></a>
+### GET /v1/ip/location/:ip
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### **Parâmetros da Requisição**
+  
+  | Parâmetro     | Tipo     | Descrição                            | Observação                                      |
+  |---------------|----------|--------------------------------------|----------------------------------------------|
+  | `ip`     | string   | IP do usuário   | Deve ser no formato string Ex.: "223.0.0.0" |
 
-## License
+### Respostas
+- Status **200** (Created)
+  - **Descrição:** Dados retornados com sucesso.
+- Status **404** (Not Found)
+  - **Descrição:** Dados não encontrados.
+- Status **500** (Internal Server Error)
+  - **Descrição:** Erro interno do sistema.
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### Busca binária <a name="binary-search"></a>
+
+Apesar da requisição ter o mesmo formato da v1, aqui há um diferencial gigantesco em relação à performance. Para este endpoint, foi utilizado uma busca binária, reduzindo o a latência da requisição em aproximadamente 90%.
+
+A busca binária é um algoritmo eficiente para encontrar um elemento em uma lista ordenada. Ela funciona dividindo repetidamente o intervalo de busca pela metade até encontrar o elemento desejado ou concluir que ele não está presente.
+
+- Como funciona
+
+Início: Começamos com dois índices: início e fim, representando os limites da lista.
+
+Verificação do meio: Calculamos o índice do meio:
+
+meio = (Início + Fim) / 2
+
+- Comparação:
+
+Se o elemento no meio for o que buscamos, retornamos a posição.
+
+Se o elemento buscado for menor, repetimos a busca na metade esquerda.
+
+Se for maior, repetimos na metade direita.
+
+Repetição: Continuamos dividindo até encontrar o elemento ou até que início > fim, o que significa que o elemento não existe na lista.
+
+- Complexidade
+
+Tempo: 𝑂(log 𝑛), onde n é o tamanho da lista.
+Espaço: 𝑂(1) para a versão iterativa ou 𝑂(log⁡ 𝑛) para a versão recursiva.
+
+Então no exemplo utilizado aqui, temos no pior caso o último elemento da lista, aproximadamente número 3 milhões. No caso da busca linear, a lista precisaria ser percorrida 3 milhões de vezes, um por elemento, até encontrar o elemento desejado. Já utilizando a busca binária, temos O(log2​ 𝑛), onde 𝑛 ≈ 3,000,000, então temos log2 3,000,000 ≈ 21,5 → aproximadamente 22 comparações no pior caso.
+
+[Fonte](https://pt.wikipedia.org/wiki/Pesquisa_bin%C3%A1ria)
+
+## Testes <a name="tests"></a>
+
+A aplicação possui testes unitários de todas as rotas. Para rodar os testes, basta executar o comando abaixo:
+
+```
+  npm run test
+```
+
+E a aplicação também possui testes de carga utilizando a biblioteca [k6](https://jslib.k6.io/), com até 100 usuários simultâneos. Para rodar os testes de carga, basta executar o comando abaixo:
+
+```
+  npm run test:performance
+```
