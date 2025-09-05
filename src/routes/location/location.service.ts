@@ -22,10 +22,21 @@ export class LocationService implements OnModuleInit {
     console.log(`Dataset loaded with ${this.dataset.length} rows`);
   }
 
-  async findLocationByIp(ip: string): Promise<IpRange | null> {
+  async findLocationByIpV1(ip: string): Promise<IpRange | null> {
     const ipId = ipToId(ip);
 
-    const result = this.findLocation.run(ipId, this.dataset);
+    const result = this.findLocation.run(ipId, this.dataset, 'v1');
+    if (!result) {
+      throw new NotFoundException(ErrorMessage.LOCATION_NOT_FOUND);
+    }
+
+    return result;
+  }
+
+  async findLocationByIpV2(ip: string): Promise<IpRange | null> {
+    const ipId = ipToId(ip);
+
+    const result = this.findLocation.run(ipId, this.dataset, 'v2');
     if (!result) {
       throw new NotFoundException(ErrorMessage.LOCATION_NOT_FOUND);
     }

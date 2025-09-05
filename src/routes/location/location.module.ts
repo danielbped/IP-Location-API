@@ -1,13 +1,13 @@
 import { Module, NestModule, MiddlewareConsumer, RequestMethod } from "@nestjs/common";
 import { LocationService } from "./location.service";
-import { LocationController } from "./location.controller";
+import { LocationControllerV1, LocationControllerV2 } from "./location.controller";
 import { LocationMiddleware } from "../../middleware/location.middleware";
 import { LoadDataset } from '../../helper/loadDataset.helper';
 import { FindLocation } from '../../helper/findLocation.helper';
 
 @Module({
   imports: [],
-  controllers: [LocationController],
+  controllers: [LocationControllerV1, LocationControllerV2],
   providers: [LocationService, LoadDataset, FindLocation],
   exports: [LocationService],
 })
