@@ -1,6 +1,6 @@
-# Ip Location API
+# IP Location API
 
-Trata-se de uma API com o intuito de fazer uma busca por IP, em uma grande base de dados, e retornar a localização do IP enviado por parâmetro. A base de dados utilizada para os testes a seguir foi um arquivo .csv com aproximadamente 3 milhões de linhas. O intuito do teste era realizar a busca com uma latência de até 100ms e o resultado obtido foi de aproximadamente 9ms, para o último item da lista. Com o objetivo comparativo, a API foi versionada, onde na v1 é realizada uma busca linear na base de dados, tendo como resultado uma latência de aproximadamente 150ms, e na v2 é realizada uma busca binária, tendo como resultado a latência, comentada anteriormente, de 9ms. A base de dados estará disponível [aqui](https://drive.google.com/file/d/1F7pKrro7snTqvH8bKZgmVEgcI9OnRKP8/view?usp=sharing) e para realizar os testes deve ser adicionada no diretório [src/assets]. Este projeto possui testes unitários do controller e testes de carga, utilizando a biblioteca [k6](https://jslib.k6.io/), com até 100 usuários simultâneos.
+Trata-se de uma API com o intuito de fazer uma busca por IP, em uma grande base de dados, e retornar a localização do IP enviado por parâmetro. A base de dados utilizada para os testes a seguir foi um arquivo .csv com aproximadamente 3 milhões de linhas. O intuito do teste era realizar a busca com uma latência de até 100ms e o resultado obtido foi de aproximadamente 9ms, para o último item da lista. Com o objetivo comparativo, a API foi versionada, onde na v1 é realizada uma busca linear na base de dados, tendo como resultado uma latência de aproximadamente 150ms, e na v2 é realizada uma busca binária, tendo como resultado a latência, comentada anteriormente, de 9ms. A base de dados estará disponível [aqui](https://drive.google.com/file/d/1F7pKrro7snTqvH8bKZgmVEgcI9OnRKP8/view?usp=sharing) e para realizar os testes deve ser adicionada no diretório [src/assets](./src/assets). Este projeto possui testes unitários do controller e testes de carga, utilizando a biblioteca [k6](https://jslib.k6.io/), com até 100 usuários simultâneos.
 
 # Sumário
 - [Tecnologias utilizadas](#tech)
@@ -71,7 +71,7 @@ Agora basta acessar a URL http://localhost:3000/docs para visualizar as rotas di
   | `ip`     | string   | IP do usuário   | Deve ser no formato string Ex.: "223.0.0.0" |
 
 ### Respostas
-- Status **200** (Created)
+- Status **200** (Success)
   - **Descrição:** Dados retornados com sucesso.
 - Status **404** (Not Found)
   - **Descrição:** Dados não encontrados.
@@ -79,7 +79,7 @@ Agora basta acessar a URL http://localhost:3000/docs para visualizar as rotas di
   - **Descrição:** Erro interno do sistema.
 
 ## Buscar localização pelo IP v2 <a name="get-location-v2"></a>
-### GET /v1/ip/location/:ip
+### GET /v2/ip/location/:ip
 
 ### **Parâmetros da Requisição**
   
@@ -88,7 +88,7 @@ Agora basta acessar a URL http://localhost:3000/docs para visualizar as rotas di
   | `ip`     | string   | IP do usuário   | Deve ser no formato string Ex.: "223.0.0.0" |
 
 ### Respostas
-- Status **200** (Created)
+- Status **200** (Success)
   - **Descrição:** Dados retornados com sucesso.
 - Status **404** (Not Found)
   - **Descrição:** Dados não encontrados.
@@ -97,14 +97,11 @@ Agora basta acessar a URL http://localhost:3000/docs para visualizar as rotas di
 
 ### Busca binária <a name="binary-search"></a>
 
-Apesar da requisição ter o mesmo formato da v1, aqui há um diferencial gigantesco em relação à performance. Para este endpoint, foi utilizado uma busca binária, reduzindo o a latência da requisição em aproximadamente 90%.
-
-A busca binária é um algoritmo eficiente para encontrar um elemento em uma lista ordenada. Ela funciona dividindo repetidamente o intervalo de busca pela metade até encontrar o elemento desejado ou concluir que ele não está presente.
+Apesar da requisição ter o mesmo formato da v1, aqui há um diferencial gigantesco em relação à performance. Para este endpoint, foi utilizado uma busca binária, reduzindo o a latência da requisição em aproximadamente 90%. A busca binária é um algoritmo eficiente para encontrar um elemento em uma lista ordenada. Ela funciona dividindo repetidamente o intervalo de busca pela metade até encontrar o elemento desejado ou concluir que ele não está presente.
 
 - Como funciona
 
 Início: Começamos com dois índices: início e fim, representando os limites da lista.
-
 Verificação do meio: Calculamos o índice do meio:
 
 meio = (Início + Fim) / 2
@@ -112,11 +109,8 @@ meio = (Início + Fim) / 2
 - Comparação:
 
 Se o elemento no meio for o que buscamos, retornamos a posição.
-
 Se o elemento buscado for menor, repetimos a busca na metade esquerda.
-
 Se for maior, repetimos na metade direita.
-
 Repetição: Continuamos dividindo até encontrar o elemento ou até que início > fim, o que significa que o elemento não existe na lista.
 
 - Complexidade
