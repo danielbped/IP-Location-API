@@ -2,7 +2,7 @@ import { Controller, Get, Request } from "@nestjs/common";
 import { LocationService } from "./location.service";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { StatusCodes } from "http-status-codes";
-import { LocationSchemaResponse } from "src/schemas/location.schema";
+import { LocationSchemaResponse } from "../../schemas/location.schema";
 
 @ApiTags('Location')
 @Controller('ip')

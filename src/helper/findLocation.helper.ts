@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { IpRange } from "src/interface/IpRange.interface";
+import { IpRange } from "../interface/IpRange.interface";
 
 @Injectable()
 export class FindLocation {

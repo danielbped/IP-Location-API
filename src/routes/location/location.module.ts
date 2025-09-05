@@ -2,8 +2,8 @@ import { Module, NestModule, MiddlewareConsumer, RequestMethod } from "@nestjs/c
 import { LocationService } from "./location.service";
 import { LocationController } from "./location.controller";
 import { LocationMiddleware } from "../../middleware/location.middleware";
-import { LoadDataset } from 'src/helper/loadDataset.helper';
-import { FindLocation } from 'src/helper/findLocation.helper';
+import { LoadDataset } from '../../helper/loadDataset.helper';
+import { FindLocation } from '../../helper/findLocation.helper';
 
 @Module({
   imports: [],
