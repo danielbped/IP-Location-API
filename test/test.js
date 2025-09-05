@@ -1,5 +1,6 @@
 import http from 'k6/http';
 import { check, sleep } from 'k6';
+import { SharedArray } from 'k6/data';
 
 export const options = {
   stages: [
@@ -10,13 +11,9 @@ export const options = {
   ],
 };
 
-const ipDataset = [
-  { ip: "1.0.170.0", countryCode: "TH" },
-  { ip: "8.8.8.8", countryCode: "US" },
-  { ip: "200.147.67.0", countryCode: "BR" },
-  { ip: "203.0.113.25", countryCode: "-" },
-  { ip: "5.135.12.0", countryCode: "FR" },
-];
+const ipDataset = new SharedArray('ipDataset', () =>
+  JSON.parse(open('./ips.json'))
+);
 
 export default function () {
   const ipData = ipDataset[Math.floor(Math.random() * ipDataset.length)];
