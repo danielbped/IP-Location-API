@@ -1,6 +1,6 @@
 import { Controller, Get, Request } from "@nestjs/common";
 import { LocationService } from "./location.service";
-import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiOperation, ApiResponse, ApiTags, ApiParam } from "@nestjs/swagger";
 import { StatusCodes } from "http-status-codes";
 import { LocationSchemaResponse } from "../../schemas/location.schema";
 
@@ -11,6 +11,7 @@ export class LocationControllerV1 {
 
   @Get('/location/:ip')
   @ApiOperation({ summary: 'Get location by ip using linear search' })
+  @ApiParam({ name: 'ip', required: true, description: 'IP address to search location for' })
   @ApiResponse({
     status: StatusCodes.OK,
     description: 'Returns location by id successfully.',
@@ -34,6 +35,7 @@ export class LocationControllerV2 {
 
   @Get('/location/:ip')
   @ApiOperation({ summary: 'Get location by ip using binary search' })
+  @ApiParam({ name: 'ip', required: true, description: 'IP address to search location for' })
   @ApiResponse({
     status: StatusCodes.OK,
     description: 'Returns location by id successfully.',
